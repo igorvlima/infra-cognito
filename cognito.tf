@@ -31,11 +31,6 @@ resource "aws_cognito_user_pool_client" "user_pool_client" {
   name         = "cpf-auth-client"
   user_pool_id = aws_cognito_user_pool.user_pool.id
   generate_secret = false
-
-  allowed_oauth_flows = ["implicit"]
-  allowed_oauth_scopes = ["email", "openid", "profile"]
-  allowed_oauth_flows_user_pool_client = true
-
   supported_identity_providers = ["COGNITO"]
 }
 
