@@ -47,4 +47,6 @@ resource "aws_cognito_user_pool_domain" "user_pool_domain" {
 resource "random_string" "suffix" {
   length  = 6
   special = false
+  upper   = false
+  number  = true
 }
