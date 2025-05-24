@@ -1,47 +1,33 @@
 resource "aws_cognito_user_pool" "user_pool" {
   name = "cpf-auth-user-pool"
 
-  alias_attributes = ["email", "preferred_username"]
-
-  schema {
-    name = "cpf"
-    attribute_data_type = "String"
-    mutable = false
-    required = false
-    string_attribute_constraints {
-      min_length = 11
-      max_length = 11
-    }
-  }
-
-  auto_verified_attributes = ["email"]  # Se quiser auto-verificar email
+  auto_verified_attributes = []
 
   password_policy {
-    minimum_length = 8
-    require_lowercase = false
-    require_numbers = false
-    require_symbols = false
-    require_uppercase = false
+    minimum_length    = 8
+    require_lowercase = true
+    require_uppercase = true
+    require_numbers   = true
+    require_symbols   = false
   }
 
-  mfa_configuration = "OFF"
+  admin_create_user_config {
+    allow_admin_create_user_only = false
+  }
 }
 
 resource "aws_cognito_user_pool_client" "user_pool_client" {
   name         = "cpf-auth-client"
   user_pool_id = aws_cognito_user_pool.user_pool.id
+
   generate_secret = false
+
+  explicit_auth_flows = [
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
+
   supported_identity_providers = ["COGNITO"]
-}
 
-resource "aws_cognito_user_pool_domain" "user_pool_domain" {
-  domain       = "cpf-auth-${random_string.suffix.result}"
-  user_pool_id = aws_cognito_user_pool.user_pool.id
-}
-
-resource "random_string" "suffix" {
-  length  = 6
-  special = false
-  upper   = false
-  number  = true
+  allowed_oauth_flows_user_pool_client = false
 }
