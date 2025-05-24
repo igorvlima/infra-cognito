@@ -7,7 +7,7 @@ resource "aws_cognito_user_pool" "user_pool" {
     name = "cpf"
     attribute_data_type = "String"
     mutable = false
-    required = true
+    required = false
     string_attribute_constraints {
       min_length = 11
       max_length = 11
